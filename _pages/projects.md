@@ -1,11 +1,11 @@
 ---
 layout: page
-title: projects
+title: ML Projects
 permalink: /projects/
-description: A growing collection of your cool projects.
+description: 🌿 Hi, and thanks for visiting!
 nav: true
-nav_order: 3
-display_categories: [work, fun]
+nav_order: 2
+display_categories: [Wearable Sensing & Human Activity Recognition, Computer Vision & Image Modeling, Sequence & Pattern Learning, Generative Modeling]
 horizontal: false
 ---
 

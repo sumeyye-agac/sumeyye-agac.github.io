@@ -1,81 +1,132 @@
 ---
 layout: page
-title: project 7
-description: with background image
-img: assets/img/4.jpg
-importance: 1
-category: work
-related_publications: true
+title: Feature Engineering for Wrist-Based Activity Recognition
+description: Analysis of motion, orientation, and rotation features extracted from wrist accelerometer data to classify complex activities
+img: assets/img/projects/7_project/cover.png
+importance: 9
+category: Wearable Sensing & Human Activity Recognition
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+### ✨ Motivation
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+This project explored how different sets of features extracted from wrist-worn accelerometer data can improve activity recognition performance. Unlike studies focusing only on simple locomotion (walking, running), this work investigated complex activities such as eating, smoking, and typing. The aim was to identify which features, such as motion, orientation, or rotation, provide the best discriminative power and whether combining them improves accuracy.
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+---
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
+### 🧭 Experimental Setup
+
+**Dataset Overview:**
+- **Participants:** 10 volunteers (ages 23–35)
+- **Device:** Samsung Galaxy S2 emulating a smartwatch, worn on the right wrist
+- **Sampling Rate:** 50 Hz
+- **Activities (13):**  
+  - Eating  
+  - Typing  
+  - Writing  
+  - Drinking coffee  
+  - Smoking  
+  - Giving a talk  
+  - Walking  
+  - Jogging  
+  - Biking  
+  - Walking upstairs  
+  - Walking downstairs  
+  - Sitting  
+  - Standing  
+
+**Protocols:**
+- Most activities lasted 3–6 minutes per participant.
+- Each time window was 20 seconds.
+- Labels were manually annotated.
+
+---
+
+### 🛠️ Feature Extraction
+
+Features were grouped into **three categories**:
+
+**M: Motion Features** (from acceleration magnitude):
+- Mean
+- Variance
+- RMS
+- Zero-Crossing Rate
+- Absolute Difference
+- First 5 FFT Coefficients
+- Spectral Energy
+
+**O: Orientation Features** (from each axis separately):
+- Standard Deviation
+- RMS
+- Zero-Crossing Rate
+- Absolute Difference
+
+**R: Rotation Features** (pitch and roll computed from acceleration):
+- Mean
+- Standard Deviation
+- RMS
+- Zero-Crossing Rate
+- Absolute Difference
+- Spectral Energy
+
+In total, **35 features** were extracted per window.
+
+---
+
+### 🧪 Results and Insights
+
+Classification was performed using **Decision Tree**, **Naive Bayes**, and **Random Forest** classifiers with 10-fold cross-validation.
+
+---
+
+**Classifier Comparison:**
+
+<div class="text-center my-4">
+  <img src="/assets/img/projects/7_project/cover.png" alt="Classifier Comparison" class="img-fluid rounded z-depth-1" style="max-width:800px;">
+  <p class="mt-2"><em>Figure 4: Average accuracy of classifiers across feature combinations</em></p>
 </div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
 
-You can also put regular text between your rows of images, even citations {% cite einstein1950meaning %}.
-Say you wanted to write a bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
+- Random Forest consistently outperformed the others, achieving up to **89% accuracy**.
+- Naive Bayes performed surprisingly well on walking-related activities.
+- Decision Tree had lower accuracy but remained interpretable.
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+---
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+**Feature Combination Analysis:**
 
-{% raw %}
+- **Orientation features alone achieved the highest individual accuracy (78%).**
+- **Combining motion and orientation features yielded the best overall results (up to 89%).**
+- Adding rotation features did not consistently improve performance and sometimes increased confusion among similar activities.
 
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-```
+---
 
-{% endraw %}
+**Gyroscope Comparison:**
+
+- Rotation features extracted from gyroscope data were also evaluated.
+- While gyroscope provided more precise rotation information, it did not substantially outperform pitch and roll derived from the accelerometer.
+- Considering battery consumption, an **accelerometer-only solution remains practical**.
+
+---
+
+### 📝 Key Insights
+
+- **Orientation features are most discriminative** among wrist-worn signals.
+- Combining motion and orientation consistently improved accuracy.
+- Using only accelerometer data was nearly as effective as adding gyroscope data while consuming less power.
+- Activities involving similar hand positions (e.g., sitting vs. standing) remained challenging.
+
+---
+
+### ⚙️ Technical Stack
+
+- **Language:** Python
+- **Libraries:** Scikit-learn
+- **Sensors:** 3-axis accelerometer (and gyroscope for comparison)
+- **Classifier Algorithms:** Decision Tree, Naive Bayes, Random Forest
+
+---
+
+### 🔗 Links
+
+- [Publication](https://www.researchgate.net/publication/307879621_Feature_Engineering_for_Activity_Recognition_from_Wrist-worn_Motion_Sensors)
+

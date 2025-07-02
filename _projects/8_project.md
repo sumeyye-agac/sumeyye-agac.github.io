@@ -1,81 +1,182 @@
 ---
 layout: page
-title: project 8
-description: an other project with a background image and giscus comments
-img: assets/img/9.jpg
-importance: 2
-category: work
-giscus_comments: true
+title: Context-Aware Dynamic Activity Recognition on Wearables
+description: Adaptive recognition system dynamically adjusting sampling rates, sensors, and feature complexity to recognize smoking-related and daily activities from wrist-worn motion sensors
+img: assets/img/projects/8_project/cover.png
+importance: 7
+category: Wearable Sensing & Human Activity Recognition
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+### ✨ Motivation
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+This project investigates how dynamic, context-aware adaptation can improve human activity recognition (HAR) on wrist-worn devices. Unlike static pipelines with fixed sampling and feature extraction, this system adjusts configurations at runtime based on activity complexity to balance recognition accuracy, battery consumption, and computational cost.
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+To better address public health concerns related to smoking, the dataset was carefully designed to include smoking gestures as well as other daily wrist-to-mouth movements like eating and drinking. This approach helps the recognition system distinguish smoking from similar actions and can support applications for tracking smoking behavior and encouraging healthier habits.
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+---
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
+### 📘 Method Overview
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+The architecture includes **three main modules**, illustrated in the flowchart below:
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
-
-{% raw %}
-
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+<div class="row mt-3">
+  <div class="col-sm-12 text-center">
+    <img src="/assets/img/projects/8_project/system-flowchart.png" alt="System Flowchart" class="img-fluid rounded z-depth-1">
+    <p class="mt-2"><em>System Flowchart – State Detection, Session Management, and Classification Modules</em></p>
   </div>
 </div>
-```
 
-{% endraw %}
+---
+
+### 📊 Dataset and Activities
+
+Data were collected over **three months** from **11 participants** (ages 20–45) using:
+
+- ⌚**Smartwatches:** LG Watch R, Urbane, Sony Watch 3
+- 📱**Smartphones:** Samsung Galaxy S2/S3
+
+**Sensors:**
+- 3-axis accelerometer
+- 3-axis gyroscope
+
+**Recognized Activities (10 classes):**
+- Smoking (standing, sitting, walking, group conversation)
+- Drinking (sitting, standing)
+- Eating
+- Walking
+- Standing
+- Sitting
+
+**Sampling:** All data were collected at **50 Hz**, then downsampled to 1–25 Hz for evaluation.
+
+To simulate real-world use, scenarios combined multiple activities performed naturally in sequence.
+
+---
+
+#### 🚦 1. State Detection Module
+- **Purpose:** Identify if the current activity is *simple* or *complex*.
+- **How it works:**
+  - Reads accelerometer (ACC) data in sliding windows.
+  - If the last detected state was complex, gyroscope (GYR) data are also read.
+  - Uses a **rule-based algorithm** (JRIP) to decide state transitions.
+  - If an activity persists for >60 seconds, it triggers classification.
+
+---
+
+#### 🗂️ 2. Session Module
+- **Purpose:** Track sessions of the same activity over time.
+- **Functionality:**
+  - Checks whether the activity exists in a session dictionary.
+  - Updates average F1-score and count.
+  - Prepares context for classification.
+
+---
+
+#### 🧩 3. Classification Module
+- **Purpose:** Classify the detected session with an appropriate model.
+- **Dynamic configuration:**
+  - *Simple Session:*
+    - Low-frequency sampling
+    - Lightweight features
+    - ACC data only
+  - *Complex Session:*
+    - High-frequency sampling
+    - Richer features
+    - ACC + GYR data
+  - Computes F1-score and updates session metrics.
+
+---
+
+### ⚙️ Technical Highlights
+
+**Sensor and Data Configurations:**
+- **Sampling Rates:** 1, 2, 5, 10, 25, 50 Hz
+- **Window Sizes:** 5–30 seconds
+- **Feature Types:**
+  - Statistical (mean, std, range)
+  - Frequency domain (energy, entropy)
+
+**Dynamic Adaptation:**
+- Reduces sampling when the user is static.
+- Switches to richer features and higher sampling when complex motion is detected.
+- Enables **energy savings without compromising classification performance**.
+
+---
+
+### 🧪 Results and Insights
+
+**Performance Comparison:**
+
+- **Static:** Always uses full sensors and highest sampling.
+- **Semi-Dynamic:** Varies sampling rate.
+- **Dynamic:** Varies sampling, feature set, and sensors.
+
+**Key Findings:**
+- Dynamic configuration improved **overall F1-score from 0.72 to 0.78**.
+- Complex activities (e.g., smoking in a group) achieved **up to 20% higher recognition**.
+- CPU time reduced by ~15%.
+- Energy consumption reduced by ~38%.
+
+---
+
+**Resource vs. Accuracy Trade-offs:**
+
+<div class="text-center my-4">
+  <img src="/assets/img/projects/8_project/resource-accuracy-tradeoff.png" alt="Resource vs F1 Score" class="img-fluid rounded z-depth-1" style="max-width:500px;">
+  <p class="mt-2"><em>Resource Consumption and Accuracy Trade-off</em></p>
+</div>
+
+---
+
+**Efficiency Trends:**
+
+<div class="row mt-3">
+  <div class="col-sm-6">
+    <img src="/assets/img/projects/8_project/cpu-consumption.png" alt="CPU Time" class="img-fluid rounded z-depth-1">
+  </div>
+  <div class="col-sm-6">
+    <img src="/assets/img/projects/8_project/energy-consumption.png" alt="Energy Consumption" class="img-fluid rounded z-depth-1">
+  </div>
+</div>
+
+- Static configurations consumed significantly more CPU and energy.
+- Dynamic sampling and feature selection kept resource use low without harming accuracy.
+
+---
+
+### ✨ Key Contributions
+
+✅ **Context-Aware HAR Pipeline:**
+First system dynamically switching sampling rate, feature complexity, and sensor set on wearables.
+
+✅ **Rule-Based State Detection:**
+Lightweight detection of simple vs. complex activities.
+
+✅ **Resource Profiling:**
+Detailed measurements of CPU time, energy, and memory.
+
+✅ **Improved Recognition:**
+Dynamic adaptation boosted recognition performance for smoking-related activities.
+
+---
+
+### 📝 Reflections
+
+- Dynamic configurations **outperformed static baselines** in both recognition and resource use.
+- Rule-based state detection was accurate and computationally lightweight.
+- This work demonstrates that **context-aware HAR is feasible on low-power devices**.
+
+---
+
+### ⚙️ Technical Stack
+
+- **Languages:** Python
+- **Devices:** Wrist-worn IMU sensors
+- **Techniques:** Dynamic configuration switching, adaptive feature extraction, energy profiling
+
+---
+
+### 🔗 Links
+
+- [Publication](https://doi.org/10.1016/j.compeleceng.2020.106949)

@@ -1,81 +1,109 @@
 ---
 layout: page
-title: project 2
-description: a project with a background image and giscus comments
-img: assets/img/3.jpg
-importance: 2
-category: work
-giscus_comments: true
+title: How Does a CNN Learn?
+description: In-depth analysis of image classification using convolutional networks, architecture variations, and training dynamics
+img: assets/img/projects/2_project/cover.png
+importance: 5
+category: Computer Vision & Image Modeling
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+### ✨ Motivation
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+In this project, I built and analyzed a convolutional neural network (CNN) in TensorFlow to investigate the impact of architectural and training hyperparameters on model performance. While most deep learning pipelines focus solely on accuracy, this work emphasizes systematic experimentation and interpretability, examining how design decisions affect convergence, generalization, and representation learning.
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+Using the CIFAR-10 benchmark dataset, I ran over 30 comparative experiments, isolating variables such as activation functions, filter sizes, kernel initializations, batch normalization, dropout, data augmentation, and optimization strategies. My goal was to draw reliable conclusions about which choices are critical under real-world constraints like limited training time, computational budget, and risk of overfitting.
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+---
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
+### 🧩 Architecture Overview
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+The final CNN model consists of three convolutional layers with ReLU activation and He initialization, followed by a dense layer. Max pooling and batch normalization were applied, but dropout was intentionally omitted after experimental comparison. Input data was normalized and augmented with horizontal flips and random crops.
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+Key configuration:
+- Conv layers: 3x3 filters with 32–64–128 feature maps  
+- Dense layer: 512 units  
+- Batch norm (pre-activation), no dropout  
+- Optimizer: Adam, batch size: 32  
+- Early stopping based on validation loss  
+- 83%+ test accuracy achieved after ~100 epochs
 
-{% raw %}
+This architecture was chosen not for complexity, but for the ability to clearly isolate and interpret the effect of each modification.
 
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+---
+
+### 📊 Parameter Impact
+
+Each parameter was varied in isolation and evaluated using held-out test performance. Key findings:
+
+- ReLU consistently outperformed sigmoid/tanh in both convergence and generalization  
+- Batch normalization (BN) yielded significant gains when applied before activation  
+- Smaller filters (3x3) provided optimal trade-off between spatial resolution and compute  
+- Dropout slowed convergence and underperformed in this architecture  
+- Adam was the most robust optimizer across experiments
+
+<div class="d-flex justify-content-center">
+  <div class="col-md-6">
+    {% include figure.liquid path="assets/img/projects/2_project/effect-batchnorm.png" title="Effect of Batch Normalization" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
-```
 
-{% endraw %}
+---
+
+### 🔬 Feature Representation Analysis
+
+To inspect how feature representations evolve across training, I extracted the latent space from the final dense layer and visualized it using t-SNE. Over 100 epochs, the learned space became more structured and separable, especially for well-represented classes.
+
+<div class="d-flex justify-content-center">
+  <div class="col-md-6">
+    {% include figure.liquid path="assets/img/projects/2_project/tsne-epoch100.png" title="t-SNE of final feature representations (Epoch 100)" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+
+---
+
+### 📈 Optimizer Comparison
+
+The model was trained using several optimization strategies including SGD, RMSProp, Adagrad, and Adam. Results showed that adaptive optimizers—particularly Adam—consistently provided the best convergence and final accuracy.
+
+<div class="row">
+  <div class="col-sm">
+    {% include figure.liquid path="assets/img/projects/2_project/optimizer-train-accuracy.png" title="Training Accuracy per Optimizer" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm">
+    {% include figure.liquid path="assets/img/projects/2_project/optimizer-validation-accuracy.png" title="Validation Accuracy per Optimizer" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+
+#### 🔍 Experiment Summary
+
+This project involved extensive experimentation to understand the impact of different hyperparameters and architectural choices on CNN performance. Each category below was systematically explored through isolated tests:
+
+| Category             | Variants Explored                         |
+|----------------------|--------------------------------------------|
+| Activation Functions | ReLU, Sigmoid, Tanh                        |
+| Filter Sizes         | 3×3, 5×5, 7×7                              |
+| Feature Maps         | 32–64–128, 32–32–64, 64–128–256            |
+| Fully Connected Layers | 1 layer, 2 layers, 3 layers              |
+| Pooling Methods      | Max pooling, Average pooling              |
+| Initialization Schemes | He, Xavier, Random Normal               |
+| Data Augmentation    | Horizontal flip, Random crop, Combined (S3) |
+| Dropout Rates        | 0.3, 0.5, No dropout                       |
+| Batch Normalization  | With batch norm, Without batch norm       |
+| Batch Sizes          | 16, 32, 64                                 |
+| Optimizers           | Adam, SGD, RMSProp, Adagrad, Adadelta     |
+
+Each configuration was logged, visualized, and interpreted to understand not just what works, but why it works. This deliberate process informed the final model design.
+
+
+### ⚙️ Technical Stack
+- **Framework**: TensorFlow 
+- **Dataset**: CIFAR-10  
+- **Architecture**: 3-layer CNN  
+- **Visualization**: t-SNE, Matplotlib, comparative charts   
+- **Training**: Manual tuning, early stopping, augmentation
+
+---
+
+### 🔗 Links  
+- [Project on GitHub](https://github.com/sumeyye-agac/object-classification-CIFAR10-tensorflow)

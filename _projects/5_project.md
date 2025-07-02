@@ -1,80 +1,94 @@
 ---
 layout: page
-title: project 5
-description: a project with a background image
-img: assets/img/1.jpg
-importance: 3
-category: fun
+title: Image Stitching (Panoramic) from Scratch
+description: Homography estimation and panoramic reconstruction combining SVD, backward warping, and image blending (no built-in libraries like OpenCV)
+img: assets/img/projects/5_project/cover.png
+importance: 2
+category: Computer Vision & Image Modeling
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+### ✨ Motivation
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+This project demonstrates how homography estimation can be used to warp and blend images into panoramic mosaics. Unlike relying on built-in libraries (e.g., OpenCV's `stitcher()`), the entire pipeline was implemented from scratch in Python, providing a clear, step-by-step understanding of projective geometry and image blending.
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+---
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+### 🛠️ Pipeline Overview
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
-You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
+The process consists of four main modules:
 
-<div class="row justify-content-sm-center">
-    <div class="col-sm-8 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm-4 mt-3 mt-md-0">
-        {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    You can also have artistically styled 2/3 + 1/3 images, like these.
-</div>
+**1. Point Selection**  
+Corresponding points were selected manually by clicking on the images. The selection quality is critical because errors often result from:
+- The number of points chosen
+- Their distribution across the images
+- The precise ordering of point pairs
 
-The code is simple.
-Just wrap your images with `<div class="col-sm">` and place them inside `<div class="row">` (read more about the <a href="https://getbootstrap.com/docs/4.4/layout/grid/">Bootstrap Grid</a> system).
-To make images responsive, add `img-fluid` class to each; for rounded corners and shadows use `rounded` and `z-depth-1` classes.
-Here's the code for the last row of images above:
+*Examples of selected points on Paris A and Paris B:*
 
-{% raw %}
-
-```html
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/6.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+<div class="row mt-3">
+  <div class="col-sm-6">
+    <img src="/assets/img/projects/5_project/points-paris-a.jpg" alt="Points Paris A" class="img-fluid rounded z-depth-1">
+    <p class="mt-2 text-center"><em>Paris A – Selected points corresponding to Paris B</em></p>
   </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
+  <div class="col-sm-6">
+    <img src="/assets/img/projects/5_project/points-paris-b.jpg" alt="Points Paris B" class="img-fluid rounded z-depth-1">
+    <p class="mt-2 text-center"><em>Paris B – Selected points corresponding to Paris A</em></p>
   </div>
 </div>
-```
 
-{% endraw %}
+For more details about point selection, see <a href="https://vision.gel.ulaval.ca/~jflalonde/cours/4105/h14/tps/results/tp4/jingweicao/index.html" target="_blank">this page</a>.
+
+**2. Homography Estimation**  
+A homography matrix was computed to map each source image onto the reference plane defined by Paris B.
+
+**3. Image Warping**  
+Each image was warped to align with the base image using backward warping. This involves mapping each destination pixel back to its source location.
+
+*Example warped image:*
+
+<div class="row mt-3 justify-content-center">
+  <div class="col-sm-6">
+    <img src="/assets/img/projects/5_project/warped-paris-a.jpg" alt="Warped Paris A" class="img-fluid rounded z-depth-1">
+    <p class="mt-2 text-center"><em>Warped Paris A</em></p>
+  </div>
+</div>
+
+**4. Blending Images**  
+Finally, the warped images were combined with the base image to produce a continuous panorama. Simple pixel replacement was used in overlapping regions.
+
+*Example of a blended result:*
+
+<div class="row mt-3 justify-content-center">
+  <div class="col-sm-10">
+    <img src="/assets/img/projects/5_project/blended-panorama.jpg" alt="Blended Image" class="img-fluid rounded z-depth-1">
+    <p class="mt-2 text-center"><em>Blended Image</em></p>
+  </div>
+</div>
+
+---
+
+✅ **Summary of Steps**
+1. Select corresponding points carefully.
+2. Estimate the homography matrix.
+3. Warp the images to the same plane.
+4. Blend them into a seamless mosaic.
+
+---
+
+### 📝 Reflections
+
+- **Point Selection:** The most critical factor in quality.
+- **SVD Stability:** Robust when outliers were minimized.
+- **Blending:** Simple merging created visible seams; more advanced blending could improve results.
+- **Learning Outcome:** Building the pipeline manually provided an in-depth understanding of homography-based image stitching.
+
+---
+
+### 🔗 Links
+
+- [Project on GitHub](https://github.com/sumeyye-agac/homography-and-image-stitching-from-scratch)
+
+---
+
+Feel free to explore the repository and try stitching your own images!
