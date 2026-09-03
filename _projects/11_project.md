@@ -3,7 +3,7 @@ layout: page
 title: Movesense ECG/HRV Live Dashboard
 description: Real-time ECG, HRV, and motion streaming from a chest-worn Movesense sensor to a browser dashboard over Bluetooth
 img: assets/img/projects/11_project/cover.png
-importance: 11
+importance: 0
 category: Wearable Sensing & Human Activity Recognition
 related_publications: false
 ---
