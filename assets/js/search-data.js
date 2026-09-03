@@ -56,6 +56,11 @@ ninja.data = [{
           description: "Real-time ECG, HRV, and motion streaming from a chest-worn Movesense sensor to a browser dashboard over Bluetooth",
           section: "Projects",handler: () => {
               window.location.href = "/projects/11_project/";
+            },},{id: "projects-dreamcatcher-earable-wearer-aware-benchmark",
+          title: 'DreamCatcher Earable Wearer-Aware Benchmark',
+          description: "Benchmarking lightweight classifiers for on-device sleep-event detection (quiet/breathe/snore) on earables, using CBAM attention and knowledge distillation",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/12_project/";
             },},{id: "projects-who-s-wearing-the-glasses",
           title: 'Who’s Wearing the Glasses?',
           description: "Behavioral biometrics to identify users by analyzing head gestures",
