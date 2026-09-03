@@ -1,14 +1,27 @@
 {
   "work": [
     {
+      "name": "Mercor",
+      "position": "ML Expert",
+      "location": "United States",
+      "url": "https://mercor.com",
+      "startDate": "2026-06-01",
+      "endDate": "",
+      "summary": "Design reference ML solutions across vision, time-series, and tabular tasks for a frontier AI lab’s model benchmarking initiative. Own EDA, modeling, and validation, with a focus on clean, reproducible pipelines.",
+      "highlights": []
+    },
+    {
       "name": "Handshake",
-      "position": "MOVE AI/ML Fellow",
+      "position": "AI/ML Fellow",
       "location": "United States",
       "url": "https://joinhandshake.com/move-program/",
-      "startDate": "2025-05-01",
-      "endDate": "",
-      "summary": "Applied academic and domain-specific knowledge to evaluate and refine LLM outputs, improving the model’s reasoning and topic-specific accuracy.",
-      "highlights": []
+      "startDate": "2025-06-01",
+      "endDate": "2026-04-01",
+      "summary": "",
+      "highlights": [
+        "Prepared golden solutions and evaluated LLM-generated outputs on domain-specific, PhD-level ML tasks, completing hundreds of tasks and writing structured feedback across multiple scoring categories.",
+        "Reviewed other fellows’ evaluations for quality and accuracy, resolving disagreements through discussion with researchers to align on scoring criteria."
+      ]
     },
     {
       "name": "Market Calculus",
