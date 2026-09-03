@@ -16,7 +16,7 @@ Movesense ships a medical-grade chest sensor with ECG, IMU9, heart rate, and tem
 
 ---
 
-### 🩺 Hardware
+### 🔧 Hardware
 
 <div class="row">
   <div class="col-sm">
