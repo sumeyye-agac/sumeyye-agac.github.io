@@ -51,6 +51,11 @@ ninja.data = [{
           description: "Detecting stress states from ECG, GSR, and heart rate signals using machine learning",
           section: "Projects",handler: () => {
               window.location.href = "/projects/10_project/";
+            },},{id: "projects-movesense-ecg-hrv-live-dashboard",
+          title: 'Movesense ECG/HRV Live Dashboard',
+          description: "Real-time ECG, HRV, and motion streaming from a chest-worn Movesense sensor to a browser dashboard over Bluetooth",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/11_project/";
             },},{id: "projects-who-s-wearing-the-glasses",
           title: 'Who’s Wearing the Glasses?',
           description: "Behavioral biometrics to identify users by analyzing head gestures",
